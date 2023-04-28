@@ -2,7 +2,9 @@
 
 ## Introduction
 
-Powered by LLMs to extract participant-related information
+PartiXtract is an innovative tool that utilizes advanced Language Model Machines (LLMs) to automatically extract participant-related information from academic papers. This cutting-edge technology can accurately and efficiently extract a wide range of information about study participants, including their race, ethnicity, education, socio-economic status, and more.
+
+By using LLMs to analyze natural language text in academic papers, PartiXtract can quickly identify and extract relevant information about study participants. This can save researchers significant time and effort compared to manual data entry or extraction methods, while also improving the accuracy and completeness of the extracted data.
 
 ## Setup
 
