@@ -79,8 +79,9 @@ class PaperReader:
 
 
 if __name__ == "__main__":
+    api = ''
     PR = PaperReader(
-        "https://journals.sagepub.com/doi/full/10.1177/19485506221107268", api='')
+        "https://journals.sagepub.com/doi/full/10.1177/19485506221107268", api)
     GPT_result = PR.GPT_Paper()
     with open("./result.txt", "w") as file:
         file.write(GPT_result)
