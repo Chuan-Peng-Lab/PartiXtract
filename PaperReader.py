@@ -84,7 +84,7 @@ class PaperReader:
 
 if __name__ == "__main__":
     # api = 'sk-#################'
-    api = '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'
+    api = ''
     PR = PaperReader(
         "https://journals.sagepub.com/doi/full/10.1177/19485506221107268", api)
     GPT_result = PR.GPT_Paper()
