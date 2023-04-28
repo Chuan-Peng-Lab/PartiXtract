@@ -39,13 +39,17 @@ class PaperReader:
         openai.api_key = self.api
         messages = [
             {"role": "system", "content": "You are a researcher who is good at summarizing information about subjects in psychology papers in concise sentences"},
-            {"role": "assistant", "content": "This is the paragraph in the text that contains the subject's information: <" +
-             self.paper_participants
-             + ">, please extract information from it, including but not limited to age, gender, region, race and education level, please try to answer the following questions"},
-
-            {"role": "user", "content": """ 
-         Please refer to the format of the following example to output the subject information of the paper based on the information I provided:
-         "Fourteen self-identified Chinese Buddhists (seven males, seven females, 21–31 years of age, mean 25.4, sd 2.46) participated in this study as paid volunteers. The participants had been attached to local faith communities for 1–7 years (mean 2.5, sd 2.0) when they participated in this study. These participants are recruited from Shanxi Province, China. Eleven participants reported to attend the community activity at least once a week. Twelve participants reported to cultivate themselves according to Mahayana (one of the major schools of Buddhism) doctrine everyday. Ten participants reported to read sutra everyday. The participants were asked to rate the importance they placed on religion and their attitude toward Buddha, based on a 5-point scale (0 ¼ not important or do not believe at all, 4 ¼ very important or strongly believe), resulting a mean rating score of 3.56. All participants had no neurological or psychiatric history. All participants had college education, were right-handed and had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to scanning. This study was approved by a local ethics committee.",
+            {"role": "assistant", "content": "This is the paragraph in the text that contains the subject's information: <"
+             + self.paper_participants + ">, please extract information from it, including but not limited to age, gender, region, race and education level, please try to answer the following questions"},
+            {"role": "user", "content":
+                """ 
+                Please refer to the format of the following example to output the subject information of the paper based on the information I provided:
+                "Fourteen self-identified Chinese Buddhists (seven males, seven females, 21–31 years of age, mean 25.4, sd 2.46) participated in this study as paid volunteers. 
+                The participants had been attached to local faith communities for 1–7 years (mean 2.5, sd 2.0) when they participated in this study. These participants are recruited from Shanxi Province, China. 
+                Eleven participants reported to attend the community activity at least once a week. Twelve participants reported to cultivate themselves according to Mahayana (one of the major schools of Buddhism) doctrine everyday. 
+                Ten participants reported to read sutra everyday. The participants were asked to rate the importance they placed on religion and their attitude toward Buddha, 
+                based on a 5-point scale (0 ¼ not important or do not believe at all, 4 ¼ very important or strongly believe), resulting a mean rating score of 3.56. All participants had no neurological or psychiatric history. 
+                All participants had college education, were right-handed and had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to scanning. This study was approved by a local ethics committee.",
                 [
                     {
                         "sample_size": 14,
@@ -59,9 +63,9 @@ class PaperReader:
                         "remuneration": "NA",
                         "handedness": "right-handed"
                     },
-                ],                
-                
-                """},
+                ],
+                """
+             },
         ]
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -80,7 +84,7 @@ class PaperReader:
 
 if __name__ == "__main__":
     # api = 'sk-#################'
-    api = ''
+    api = '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'
     PR = PaperReader(
         "https://journals.sagepub.com/doi/full/10.1177/19485506221107268", api)
     GPT_result = PR.GPT_Paper()
