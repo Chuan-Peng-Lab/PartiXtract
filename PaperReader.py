@@ -1,6 +1,3 @@
-import time
-
-import fitz
 import openai
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -8,81 +5,42 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
-# api = 'sk-#################'
-api = ''
-
 
 class PaperReader:
 
-    class Paper:
-        # Paper内部类
-        def __init__(self):
-            self.paper_name = ''
-            self.paper_url = ''
-            self.paper_authors = ''
-            self.paper_abstract = ''
-            self.paper_content = ''
-            self.paper_references = ''
-            self.paper_participants = ''
-
-        def all_text(self):
-            return self.paper_name+'\n\n' + self.paper_authors + '\n\n' + \
-                self.paper_abstract+'\n\n' + self.paper_content+'\n\n' + self.paper_references
-
-        def saveText(self, ouput_path):
-            with open(ouput_path, "w") as file:
-                file.write(self.all_text())
-
-    def __init__(self, path, language="zh"):
+    def __init__(self, path, api):
         self.path = path
-        self.language = language
-        if path.endswith(".pdf"):
-            self.method = "pdf"
-            self.paper = self.readPDF()
-        elif path.startswith("https://journals.sagepub.com/"):
-            self.method = "URL"
-            self.paper = self.readURL()
-        else:
-            raise Exception("File type not supported")
+        self.api = api
+        self.paper_participants = self.paper_crawler()
 
-    def readURL(self):
+    def paper_crawler(self):
         driver_op = Options()
         driver_op.add_argument('--window-size=1920,1080')
 
         # Whether to visualize following two lines:
+        driver_op.add_argument('--headless')
+        driver_op.add_argument(
+            "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36")
+
         driver_op.add_argument('--no-sandbox')
         driver_op.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome(service=Service(
             ChromeDriverManager().install()), options=driver_op)
         driver.get(self.path)
-        time.sleep(2)
-        # Accept All
-        accept = driver.find_elements(
-            By.XPATH, "/html/body/div")
-        
-
-        for i in accept:
-            if "ACCEPT ALL" in i.text:
-                i.find_element(By.XPATH,"//div/div/div/div[2]/div/button[3]").click()
-            
-        paper = self.Paper()
-
-        paper.paper_references = driver.find_element(
-            By.XPATH, "//main/article/section[2]").text
-        temp = driver.find_elements(By.TAG_NAME, 'section')
-        for i in temp:
-            if i.text.startswith("Participants"):
-                paper.paper_participants = i.text
+        paper_participants = ''
+        sections = driver.find_elements(By.TAG_NAME, 'section')
+        for section in sections:
+            if section.text.startswith("Participants"):
+                paper_participants = section.text
                 break
-        paper.paper_url = self.path
-        return paper
+        return paper_participants
 
     def GPT_Paper(self):
-        openai.api_key = api
+        openai.api_key = self.api
         messages = [
             {"role": "system", "content": "You are a researcher who is good at summarizing information about subjects in psychology papers in concise sentences"},
             {"role": "assistant", "content": "This is the paragraph in the text that contains the subject's information: <" +
-             self.paper.paper_participants
+             self.paper_participants
              + ">, please extract information from it, including but not limited to age, gender, region, race and education level, please try to answer the following questions"},
 
             {"role": "user", "content": """ 
@@ -122,8 +80,7 @@ class PaperReader:
 
 if __name__ == "__main__":
     PR = PaperReader(
-        "https://journals.sagepub.com/doi/full/10.1177/19485506221107268", language="en-us")
+        "https://journals.sagepub.com/doi/full/10.1177/19485506221107268", api='')
     GPT_result = PR.GPT_Paper()
-    with open("./test.txt", "w") as file:
+    with open("./result.txt", "w") as file:
         file.write(GPT_result)
-    # PR.paper.saveText("paper.txt")
