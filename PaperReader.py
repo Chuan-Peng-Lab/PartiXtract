@@ -57,7 +57,7 @@ class PaperReader:
             self.paper_participants = ""
             sections = driver.find_elements(By.TAG_NAME, "section")
             for section in sections:
-                if "participant" in section.text[0:60].lower():
+                if "participant" in section.text[0:60].lower() and not section.text.startswith("Method"):
                     self.paper_participants = section.text
                     break
         except:
@@ -82,14 +82,13 @@ class PaperReader:
             {
                 "role": "user",
                 "content": """ 
-                Please refer to the format of the following example to output the subject information of the paper based on the information I provided and do not output any information other than data:
+                Please refer to the format of the following example to output the subject information of the paper based on the information I provided and do not output any information other than data,If unspecified in the text, please use "NA" insteal.All strings are wrapped with "", satisfying the grammatical format of json:
                 "Fourteen self-identified Chinese Buddhists (seven males, seven females, 21–31 years of age, mean 25.4, sd 2.46) participated in this study as paid volunteers. 
                 The participants had been attached to local faith communities for 1–7 years (mean 2.5, sd 2.0) when they participated in this study. These participants are recruited from Shanxi Province, China. 
                 Eleven participants reported to attend the community activity at least once a week. Twelve participants reported to cultivate themselves according to Mahayana (one of the major schools of Buddhism) doctrine everyday. 
                 Ten participants reported to read sutra everyday. The participants were asked to rate the importance they placed on religion and their attitude toward Buddha, 
                 based on a 5-point scale (0 ¼ not important or do not believe at all, 4 ¼ very important or strongly believe), resulting a mean rating score of 3.56. All participants had no neurological or psychiatric history. 
                 All participants had college education, were right-handed and had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to scanning. This study was approved by a local ethics committee.",
-                If unspecified in the text, please use "NA" insteal.All strings are wrapped with "", satisfying the grammatical format of json
                 output example:
                 {
                     "sample_size": 14,

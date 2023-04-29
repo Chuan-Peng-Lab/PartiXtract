@@ -1,3 +1,4 @@
-doi,sample_size,female,mean_age,age_span,education,race,area,socioeconomic,remuneration,handedness
-10.1177/19485506221107268,14,7,25.4,21-31and25.4±2.46,collegeeducation,Chinese,ShanxiProvince,China,NA,paidvolunteers,right-handed
-10.1177/10597123231163595,12,6,59.8,Under70yearsoldand59.8±NA,collegeeducation,NA,ShanxiProvince,China,NA,paidvolunteers,right-handed
+doi,sample_size,female,mean_age,age_span,education,race,area,socioeconomic,remuneration,handednes
+10.1177/19485506221107268,14,7,25.4,21-31 and 25.4±2.46,college education,Chinese,Shanxi Province, China,NA,paid volunteers,right-hande
+10.1177/19485506221107268,102,75,21,NA,NA,NA,Swiss University,NA,research credit,N
+10.1177/10597123231163595,14,7,25.4,21-31 and 25.4±2.46,college education,Chinese,Shanxi Province, China,NA,paid volunteers,right-hande
