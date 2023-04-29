@@ -34,7 +34,7 @@ class PaperReader:
                 self.GPT_Paper()
                 self.save_as_csv()
             else:
-                print("Did not find information of this doi(" +
+                print("Internet issue or did not find information of this doi(" +
                       temp_doi+") in https://journals.sagepub.com.")
 
     def paper_crawler(self):
@@ -57,14 +57,12 @@ class PaperReader:
             self.paper_participants = ""
             sections = driver.find_elements(By.TAG_NAME, "section")
             for section in sections:
-                if section.text.startswith("Participants") or section.text.startswith(
-                    "Subjects"
-                ):
+                if "participant" in section.text[0:60].lower():
                     self.paper_participants = section.text
                     break
         except:
             return False
-        if self.paper_participants =="":
+        if self.paper_participants == "":
             return False
         return True
 
@@ -91,6 +89,7 @@ class PaperReader:
                 Ten participants reported to read sutra everyday. The participants were asked to rate the importance they placed on religion and their attitude toward Buddha, 
                 based on a 5-point scale (0 ¼ not important or do not believe at all, 4 ¼ very important or strongly believe), resulting a mean rating score of 3.56. All participants had no neurological or psychiatric history. 
                 All participants had college education, were right-handed and had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to scanning. This study was approved by a local ethics committee.",
+                If unspecified in the text, please use "NA" insteal.All strings are wrapped with "", satisfying the grammatical format of json
                 output example:
                 {
                     "sample_size": 14,
@@ -133,17 +132,17 @@ class PaperReader:
 
     def save_as_csv(self):
         formated_data = json.loads(self.GPT_result)
-        temp = str(self.doi) + ", "
+        temp = str(self.doi) + ","
         for i in required_list:
-            temp = temp + str(formated_data[i]) + ", "
+            temp = temp + str(formated_data[i]) + ","
         temp = temp[:-2]
         try:
             open("./result.csv", "r+")
         except IOError:
             file = open("./result.csv", "w+")
-            lable = "doi, "
+            lable = "doi,"
             for i in required_list:
-                lable = lable + i + ", "
+                lable = lable + i + ","
             lable = lable[:-2]
             file.write(lable + "\n")
             file.close()
