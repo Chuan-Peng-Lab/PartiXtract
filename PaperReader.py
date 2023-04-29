@@ -1,4 +1,5 @@
 import json
+import os
 
 import openai
 from selenium import webdriver
@@ -7,8 +8,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
+# 如果有人跑不了代码,可以通过这里设置proxy代理
+os.environ["http_proxy"] = "http://127.0.0.1:6666"
+os.environ["https_proxy"] = "http://127.0.0.1:6666"
+
 # chatgpt api = 'sk-#################'
-api = ""
+api = "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"
 # csv中所需被试者信息的标签
 required_list = [
     "sample_size",
@@ -31,7 +36,6 @@ class PaperReader:
         for temp_doi in doi:
             # 初始化类变量
             self.url = "https://journals.sagepub.com/doi/" + temp_doi
-            self.api = api
             self.doi = temp_doi
             # 如果爬虫成功爬取信息,再继续进行下两步(函数在if中也会运行的)
             if self.paper_crawler():
@@ -82,7 +86,7 @@ class PaperReader:
 
     def GPT_Paper(self):
         # 初始化openai的api
-        openai.api_key = self.api
+        openai.api_key = api
         # 指定对话的内容,此处仍可以优化
         messages = [
             {
