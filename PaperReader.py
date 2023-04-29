@@ -64,6 +64,8 @@ class PaperReader:
                     break
         except:
             return False
+        if self.paper_participants =="":
+            return False
         return True
 
     def GPT_Paper(self):
@@ -131,18 +133,18 @@ class PaperReader:
 
     def save_as_csv(self):
         formated_data = json.loads(self.GPT_result)
-        temp = str(self.doi) + ","
+        temp = str(self.doi) + ", "
         for i in required_list:
-            temp = temp + str(formated_data[i]) + ","
-        temp = temp[:-1]
+            temp = temp + str(formated_data[i]) + ", "
+        temp = temp[:-2]
         try:
             open("./result.csv", "r+")
         except IOError:
             file = open("./result.csv", "w+")
-            lable = "doi,"
+            lable = "doi, "
             for i in required_list:
-                lable = lable + i + ","
-            lable = lable[:-1]
+                lable = lable + i + ", "
+            lable = lable[:-2]
             file.write(lable + "\n")
             file.close()
         file = open("./result.csv", "a+")
