@@ -36,6 +36,8 @@ CREATE (p:Paper{doi: csvLine.doi,sample_size:csvLine.sample_size,female:csvLine.
 mean_age:csvLine.mean_age,age_span:csvLine.age_span,education:csvLine.education,race:csvLine.race,area:csvLine.area,socioeconomic:csvLine.socioeconomic,remuneration:csvLine.remuneration,handedness:csvLine.handedness})
 ```
 
+Researchers can conduct further meta-analysis by customizing the relationship between nodes in neo4j
+
 ## Packages Required
 
 1. [openai](https://github.com/openai/openai-python)  
