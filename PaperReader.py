@@ -9,8 +9,8 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
 # 如果有人跑不了代码,可以通过这里设置proxy代理
-os.environ["http_proxy"] = "http://127.0.0.1:6666"
-os.environ["https_proxy"] = "http://127.0.0.1:6666"
+# os.environ["http_proxy"] = "http://127.0.0.1:6666"
+# os.environ["https_proxy"] = "http://127.0.0.1:6666"
 
 # chatgpt api = 'sk-#################'
 api = "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"
