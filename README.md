@@ -21,8 +21,20 @@ requirements:
     ```
 
 3. Fill in your ChatGPT API key in the 'api' variable of the program. This is necessary to authenticate your requests to the ChatGPT API and ensure that you can make use of its features.
+4. In the PaperReader() constructor, fill in the doi of the papers you need to summarize the information of the subjects in the form of strings
 
-4. Run the program by executing the appropriate command in your terminal or IDE. With everything set up properly, you should be able to start using the program right away.
+5. Run the program by executing the appropriate command in your terminal or IDE. With everything set up properly, you should be able to start using the program right away.
+
+## Data storage
+
+To facilitate meta-analysis, we need use __neo4j__ database to store data
+Convert the data in the obtained csv file into a database Paper node
+
+```sql
+LOAD CSV WITH HEADERS FROM "file:///result.csv" as csvLine
+CREATE (p:Paper{doi: csvLine.doi,sample_size:csvLine.sample_size,female:csvLine.female,
+mean_age:csvLine.mean_age,age_span:csvLine.age_span,education:csvLine.education,race:csvLine.race,area:csvLine.area,socioeconomic:csvLine.socioeconomic,remuneration:csvLine.remuneration,handedness:csvLine.handedness})
+```
 
 ## Packages Required
 
