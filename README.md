@@ -10,8 +10,9 @@ By using LLMs to analyze natural language text in academic papers, PartiXtract c
 
 requirements:
 
-1. Make sure your computer has installed the chrome browser
-2. Install python dependencies
+1. First, you need to ensure that you have installed the latest version of the Google Chrome browser on your computer. This is because the program requires Chrome to be installed in order to run.
+
+2. Next, you will need to install the necessary Python dependencies. You can do this by running the following command in your terminal:
 
     ```shell
 
@@ -19,9 +20,9 @@ requirements:
 
     ```
 
-3. Fill in your chatgpt api in the 'api' variable of the program
+3. Fill in your ChatGPT API key in the 'api' variable of the program. This is necessary to authenticate your requests to the ChatGPT API and ensure that you can make use of its features.
 
-4. Run the program
+4. Run the program by executing the appropriate command in your terminal or IDE. With everything set up properly, you should be able to start using the program right away.
 
 ## Packages Required
 
