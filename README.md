@@ -21,6 +21,7 @@ requirements:
     ```
 
 3. Fill in your ChatGPT API key in the 'api' variable of the program. This is necessary to authenticate your requests to the ChatGPT API and ensure that you can make use of its features.
+
 4. In the PaperReader() constructor, fill in the doi of the papers you need to summarize the information of the subjects in the form of strings
 
 5. Run the program by executing the appropriate command in your terminal or IDE. With everything set up properly, you should be able to start using the program right away.
