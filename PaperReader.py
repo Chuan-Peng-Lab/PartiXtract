@@ -68,9 +68,9 @@ class PaperReader:
             self.paper_participants = ""
             # 以tagname找到所有section
             sections = driver.find_elements(By.TAG_NAME, "section")
-            # 遍历所有sanction,找到前60个字符包括participant的段落,同时不以method开头
+            # 遍历所有sanction,找到前50个字符包括participant或subject的段落,同时不以method开头
             for section in sections:
-                if "participant" in section.text[0:60].lower() and not section.text.startswith("Method"):
+                if ("participant" in section.text[0:50].lower() or "subject" in section.text[0:50].lower()) and not section.text.startswith("Method"):
                     self.paper_participants = section.text
                     break
         # 如果爬取失败或者,找不到包含participant的段落返回错误,不继续进行接下来的操作
