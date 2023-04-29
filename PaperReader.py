@@ -1,9 +1,14 @@
+import json
+
 import openai
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+
+required_list = ["female", "mean_age", "age_span", "education",
+                 "race", "area", "socioeconomic", "remuneration", "handedness"]
 
 
 class PaperReader:
@@ -12,6 +17,8 @@ class PaperReader:
         self.path = path
         self.api = api
         self.paper_participants = self.paper_crawler()
+        self.doi = "10." + path.split('10.')[-1]
+        self.GPT_result = ''
 
     def paper_crawler(self):
         driver_op = Options()
@@ -43,27 +50,26 @@ class PaperReader:
              + self.paper_participants + ">, please extract information from it, including but not limited to age, gender, region, race and education level, please try to answer the following questions"},
             {"role": "user", "content":
                 """ 
-                Please refer to the format of the following example to output the subject information of the paper based on the information I provided:
+                Please refer to the format of the following example to output the subject information of the paper based on the information I provided and do not output any information other than data:
                 "Fourteen self-identified Chinese Buddhists (seven males, seven females, 21–31 years of age, mean 25.4, sd 2.46) participated in this study as paid volunteers. 
                 The participants had been attached to local faith communities for 1–7 years (mean 2.5, sd 2.0) when they participated in this study. These participants are recruited from Shanxi Province, China. 
                 Eleven participants reported to attend the community activity at least once a week. Twelve participants reported to cultivate themselves according to Mahayana (one of the major schools of Buddhism) doctrine everyday. 
                 Ten participants reported to read sutra everyday. The participants were asked to rate the importance they placed on religion and their attitude toward Buddha, 
                 based on a 5-point scale (0 ¼ not important or do not believe at all, 4 ¼ very important or strongly believe), resulting a mean rating score of 3.56. All participants had no neurological or psychiatric history. 
                 All participants had college education, were right-handed and had normal or corrected-to-normal vision. Informed consent was obtained from all participants prior to scanning. This study was approved by a local ethics committee.",
-                [
-                    {
-                        "sample_size": 14,
-                        "female": 7,
-                        "mean_age": 25.4,
-                        "age_span": "23-31 and 25.4±2.46",
-                        "education": "college education",
-                        "race": "Chinese",
-                        "area": "Shanxi Province, China",
-                        "socioeconomic": "NA",
-                        "remuneration": "NA",
-                        "handedness": "right-handed"
-                    },
-                ],
+                output example:
+                {
+                    "sample_size": 14,
+                    "female": 7,
+                    "mean_age": 25.4,
+                    "age_span": "23-31 and 25.4±2.46",
+                    "education": "college education",
+                    "race": "Chinese",
+                    "area": "Shanxi Province, China",
+                    "socioeconomic": "NA",
+                    "remuneration": "NA",
+                    "handedness": "right-handed"
+                },
                 """
              },
         ]
@@ -71,22 +77,40 @@ class PaperReader:
             model="gpt-3.5-turbo",
             messages=messages,
         )
-        result = ''
         for choice in response.choices:
-            result += choice.message.content
-        print(result, end="\n\n")
+            self.GPT_result += choice.message.content
+        print(self.GPT_result, end="\n\n")
         print("prompt_token_used:", response.usage.prompt_tokens,
               "completion_token_used:", response.usage.completion_tokens,
               "total_token_used:", response.usage.total_tokens, end="\n")
         print("response_time:", response.response_ms/1000.0, 's')
-        return result
+
+    def save_as_csv(self):
+        formated_data = json.loads(self.GPT_result)
+        temp = ""
+        for i in required_list:
+            temp = temp + str(formated_data[i]) if str(
+                formated_data[i]) != "NA" else "" + ','
+        temp = temp[:-1]
+        try:
+            open("./result.csv", "r+")
+        except IOError:
+            file = open("./result.csv", 'w+')
+            lable = "doi:ID,"
+            for i in required_list:
+                lable = lable + i + ","
+            lable = lable[:-1]
+            file.write(lable+'\n')
+            file.close()
+        file = open("./result.csv", 'a+')
+        file.write(temp+'\n')
+        file.close()
 
 
 if __name__ == "__main__":
     # api = 'sk-#################'
-    api = ''
+    api = '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'
     PR = PaperReader(
-        "https://journals.sagepub.com/doi/full/10.1177/19485506221107268", api)
-    GPT_result = PR.GPT_Paper()
-    with open("./result.txt", "w") as file:
-        file.write(GPT_result)
+        "https://journals.sagepub.com/doi/10.1177/19485506221107268", api)
+    PR.GPT_Paper()
+    PR.save_as_csv()
